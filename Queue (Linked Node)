@@ -7,7 +7,7 @@ public class Queue<T> implements QueueInterface<T> {
 	Node firstNode;
 	Node lastNode;
 	
-	public QueueController(){
+	public QueueControlle(){
 		
 		firstNode = null;
 		lastNode = null;
