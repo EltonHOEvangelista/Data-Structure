@@ -1,0 +1,76 @@
+/**
+ * @author Elton Evangelista
+ * Using a generic array, this class implements a Stack Interface.
+ */
+
+public class arrayStack<T> implements StackInterface<T> {
+
+	T[] array;
+	int capacity;
+	int size;
+	
+	public arrayStack(){
+		this.capacity = 10;
+		this.size = 0;
+		this.array = (T[]) new Object[capacity];
+	}
+	
+	@Override
+	public void push(T entry) {
+		// TODO Auto-generated method stub
+		increaseSize();
+		array[size] = entry;
+		size++;
+	}
+
+	private void increaseSize() {
+		// TODO Auto-generated method stub
+		if(this.size== this.capacity) { 
+			T[] array = (T[]) new Object[capacity];
+			for(int i=0;i<this.size;i++) {
+				array[i] = this.array[i];
+			}
+			this.array= array;
+		}
+	}
+
+	@Override
+	public T pop() {
+		// TODO Auto-generated method stub
+		
+		T popEntry = this.array[this.size];
+		this.array[this.size]=null;
+		this.size--;
+		return popEntry;
+	}
+
+	@Override
+	public T peek() {
+		// TODO Auto-generated method stub
+		return this.array[this.size-1];
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		if(this.size==0){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		this.array = (T[]) new Object[capacity];
+	}
+
+	@Override
+	public void displayStack() {
+		// TODO Auto-generated method stub
+		for(int i =this.size; i>0;i--) {
+			System.out.print(this.array[i-1] + " ");
+		}
+	}
+	
+}
