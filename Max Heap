@@ -1,0 +1,185 @@
+/**
+ * @author Elton Evangelista
+ * MaxHeap class that implements a HeapInterface using generics.
+ * methods available: add, clear, getMax, getSize, isEmpty, removeMax 
+ */
+public class MaxHeap<T extends Comparable<? super T>> implements HeapInterface<T> {
+
+	private T[] heap; // Array of heap entries
+	private int lastIndex; // Index of last entry
+	private boolean integrityOK = false;
+	private static final int DEFAULT_CAPACITY = 25;
+	
+	public MaxHeap(){	//default constructor
+	
+		this(DEFAULT_CAPACITY);	//call next constructor	
+	}
+	
+	public MaxHeap(int initialCapacity){
+		
+	if (initialCapacity < DEFAULT_CAPACITY) {	//is initial capacity too small?
+		
+		initialCapacity = DEFAULT_CAPACITY;
+	}
+	
+	@SuppressWarnings("unchecked")
+	T[] tempHeap = (T[]) new Comparable[initialCapacity];
+	heap = tempHeap;
+	lastIndex = 0;
+	integrityOK = true;
+	}		//end of constructor
+	
+	
+	/**
+	 * method to add new object into the maxHeap
+	 */
+	@Override
+	public void add(T newEntry) {
+		// TODO Auto-generated method stub
+		
+		EnsureCapacity(); 	//call method to ensure capacity 	
+		
+		int newIndex = lastIndex + 1;
+		int parentIndex = newIndex / 2;
+		
+		while ( (parentIndex > 0) && newEntry.compareTo(heap[parentIndex]) > 0){
+		
+				heap[newIndex] = heap[parentIndex];
+				newIndex = parentIndex;
+				parentIndex = newIndex / 2;
+		}
+		
+		heap[newIndex] = newEntry;
+		lastIndex++;	
+	}
+
+	/**
+	 *	method to remove max heap
+	 */
+	@Override
+	public T removeMax() {
+		// TODO Auto-generated method stub
+	
+		T root = null;
+		
+		if (!isEmpty()){
+		
+			root = heap[1]; 		//return value
+			heap[1] = heap[lastIndex]; 		//form a semiheap
+			lastIndex--; 	// Decrease size
+			reheap(1);		//call method to transform to a heap
+		}
+		
+		return root;
+	}
+
+	/**
+	 *	method to get object on max heap.
+	 */
+	@Override
+	public T getMax() {
+		// TODO Auto-generated method stub
+		
+		T root = null;
+		
+		if (!isEmpty())
+			
+			root = heap[1];
+		
+		return root;	
+	}
+
+	/**
+	 * method to check if maxHeap is empty
+	 */
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		
+		return lastIndex < 1;
+	}
+
+	/**
+	 * method to get maxHeap size
+	 */
+	@Override
+	public int getSize() {
+		// TODO Auto-generated method stub
+		
+		return lastIndex;
+	}
+
+	/**
+	 * method to clear maxHeap
+	 */
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+		while (lastIndex > -1){
+			
+			heap[lastIndex] = null;
+			lastIndex--;
+		}
+		lastIndex = 0;
+	}
+
+	/**
+	 * @param rootIndex
+	 * method to reheap after remove a object
+	 */
+	private void reheap(int rootIndex){
+		
+		boolean done = false;
+		
+		T orphan = heap[rootIndex];
+		
+		int leftChildIndex = 2 * rootIndex;
+	
+		while (!done && (leftChildIndex <= lastIndex) ){
+	
+			int largerChildIndex = leftChildIndex;
+			int rightChildIndex = leftChildIndex + 1;
+			
+			if ( (rightChildIndex <= lastIndex) && heap[rightChildIndex].compareTo(heap[largerChildIndex]) > 0){
+				largerChildIndex = rightChildIndex;
+			}
+			
+			if (orphan.compareTo(heap[largerChildIndex]) < 0){
+	
+				heap[rootIndex] = heap[largerChildIndex];
+				rootIndex = largerChildIndex;
+				leftChildIndex = 2 * rootIndex;
+			}
+			else {
+				done = true;
+			}
+		}
+	
+		heap[rootIndex] = orphan;
+	}
+	
+	/**
+	 * method to ensure capacity
+	 */
+	private void EnsureCapacity() {
+		// TODO Auto-generated method stub
+		
+		if (lastIndex == heap.length - 1) {
+			
+			resize();	//call method to resize heap.
+		}	
+	}
+	
+	/**
+	 * method to resize maxHeap
+	 */
+	private void resize() {
+		
+		@SuppressWarnings("unchecked")
+		T[] newHeap = (T[]) new Comparable[heap.length * 2];		
+		System.arraycopy(heap, 0, newHeap, 0, heap.length);
+        heap = newHeap;
+    }
+	
+}
