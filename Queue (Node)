@@ -1,0 +1,126 @@
+/**
+ * @author Elton Evangelista
+ * Using generics, this class implements a Queue Interface.
+ */
+public class Queue<T> implements QueueInterface<T> {
+	
+	Node firstNode;
+	Node lastNode;
+	
+	public QueueController(){
+		
+		firstNode = null;
+		lastNode = null;
+		
+	}
+	
+	@Override
+	public void enqueue(T Entry) {
+		// TODO Auto-generated method stub
+		
+		Node newNode = new Node(Entry, null);
+		
+		if(isEmpty()) {
+			
+			firstNode = newNode;
+			
+		}
+		else {
+			
+			lastNode.setNextNode(newNode);
+			
+		}
+		
+		lastNode = newNode;
+		
+	}
+
+	@Override
+	public T dequeue() {
+		// TODO Auto-generated method stub
+		
+		T front = getFront();
+		
+		firstNode.setData(null);
+		
+		firstNode = firstNode.getNextNode();
+		
+		if(firstNode == null)
+			lastNode = null;
+		
+		return front;
+		
+	}
+
+	@Override
+	public T getFront() {
+		// TODO Auto-generated method stub
+		
+		if(isEmpty()) {
+			//throw new EmptyQueueException();
+			return null;
+		}
+		else {
+			
+			return firstNode.getdata();
+			
+		}
+		
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		
+		if ((firstNode == null) && (lastNode ==  null)) {
+			return true;
+		}
+		else {return false;}
+		
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+		firstNode = null;
+		lastNode = null;
+		
+	}
+
+	private class Node{ 		//inner Node class
+		
+		T data;
+		
+		Node next;
+
+		public Node(T _data, Node _next) {
+			
+			this.data = _data;
+			this.next = _next;
+		
+		}
+
+		public T getdata() {
+			return data;
+		}
+
+
+		public void setData(T _data) {
+			this.data = _data;
+		}
+		
+		public void setNextNode(Node Entry) {
+			
+			next = Entry;
+		
+		}
+		
+		public Node getNextNode() {
+			
+			return next;
+		
+		}	
+	}
+	
+}
