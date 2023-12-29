@@ -1,0 +1,88 @@
+/**
+ * @author Elton Evangelista
+ * Using Node, this class implements a Stack Interface
+ * @param <T>
+ */
+public class lStack<T> implements StackInterface<T> {
+	
+	Node head;
+	int size;
+	
+	@Override
+	public void push(T entry) {
+		// TODO Auto-generated method stub
+		Node newNode = new Node<T>(entry);
+		
+		if (head == null) {
+			head = newNode;
+			size++;
+		}
+		else {
+			Node aux = head;
+			head = newNode;
+			head.next = aux;
+			size++;
+		}		
+	}
+
+	@Override
+	public T pop() {
+		// TODO Auto-generated method stub
+		
+		Node first = head;
+		if(head.next != null) {
+			head = head.next;
+			size--;
+		}
+		return (T) first.data;
+	}
+
+	@Override
+	public T peek() {
+		// TODO Auto-generated method stub
+		
+		if(!isEmpty()) {
+			return (T) head.data;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		if (head == null) { return true;}
+		else {return false;}
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		head = null; size = 0;
+	}
+
+	@Override
+	public void displayStack() {
+		// TODO Auto-generated method stub
+		
+		if(isEmpty()) {
+			System.out.println("Empty Stack");
+		}
+		else {
+			for (int i=0;i<size;i++) {
+				Node current = head;
+				System.out.print(current.data);
+				current = current.next;
+			}
+		}
+		
+	}
+	
+	private class Node<T> {
+	T data;
+	Node next;
+	
+	Node(T Entry) {
+		this.data =  Entry;}
+	}
+
+}
