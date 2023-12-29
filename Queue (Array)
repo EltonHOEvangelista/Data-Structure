@@ -1,0 +1,90 @@
+/**
+ * author Elton Evangelista
+ * Using a generic array, this class implements a Queue Interface.
+ */
+
+import java.util.Arrays;
+
+public class QueueArray<T> implements QueueInterface<T> {
+	
+    private T[] queue;
+    private int frontIndex;
+    private int backIndex;;
+	private static final int DEFAULT_CAPACITY = 25;
+    
+	public QueueArray(){
+		
+		this(DEFAULT_CAPACITY);
+	}
+	
+	public QueueArray(int initialCapacity){
+		
+	if (initialCapacity < DEFAULT_CAPACITY) {
+		
+		initialCapacity = DEFAULT_CAPACITY;
+	}
+	
+	@SuppressWarnings("unchecked")
+	T[] tempQueue = (T[]) new Object[initialCapacity + 1];
+	queue = tempQueue;
+	frontIndex = 0;
+	backIndex = initialCapacity;
+	}
+
+	@Override
+	public void enqueue(T newEntry) {
+		
+		ensureCapacity();
+		backIndex = (backIndex + 1) % queue.length;
+		queue[backIndex] = newEntry;
+	}
+
+	@Override
+	public T dequeue() {
+
+		if (isEmpty())
+			return null;
+		else{
+			T front = queue[frontIndex];
+			queue[frontIndex] = null;
+			frontIndex = (frontIndex + 1) % queue.length;
+			return front;
+		}
+	}
+
+	@Override
+	public T getFront() {
+
+		if (isEmpty())
+			return null;
+		else
+		return queue[frontIndex];
+	}
+
+	@Override
+	public boolean isEmpty() {
+
+		return frontIndex == ((backIndex + 1) % queue.length);
+	}
+
+	@Override
+	public void clear() {
+		
+		Arrays.fill(queue, null);
+		frontIndex = 0;
+		backIndex = -1;
+	}
+
+	private void ensureCapacity(){
+		
+		if (frontIndex == ((backIndex + 2) % queue.length)) {
+			
+			queue = Arrays.copyOf(queue, 2 * queue.length);
+			if (frontIndex > backIndex) {
+				
+				System.arraycopy(queue, 0, queue, queue.length / 2, backIndex + 1);
+				backIndex = queue.length / 2 + backIndex;
+			}
+	     }
+	}
+}
