@@ -1,0 +1,53 @@
+/**
+ * author Elton Evangelista
+ * Using a generic array, this class implements a circular deque.
+ */
+
+public class CircularDeque {
+	
+	private int[] arr;
+    private int findex,bindex,capcty;
+
+    public CircularDeque(int capcty) {
+        this.capcty = capcty + 1;
+        arr = new int[this.capcty];
+        findex = bindex = 0;
+    }
+    public boolean push(int value) {
+        if (isFull()) {
+            return false;
+        }
+        findex=(findex-1+capcty)%capcty;
+        arr[findex] = value;
+        return true;
+    }
+    public boolean enQueue(int value) {
+        if (isFull()) {
+            return false;
+        }
+        arr[bindex] = value;
+        bindex=(bindex+1)%capcty;
+        return true;
+    }
+    public Integer deQueue() {
+        if (isEmpty()) {
+            return null;
+        }
+        int value = arr[findex];
+        findex = (findex + 1) % capcty;
+        return value;
+    }
+    public Integer pop() {
+        if (isEmpty()) {
+            return null;
+        }
+        bindex=(bindex-1+capcty)%capcty;
+        return arr[bindex];
+    }
+    public boolean isEmpty() {
+        return findex == bindex;
+    }
+    public boolean isFull() {
+        return (bindex+1)%capcty == findex;
+    }
+}
