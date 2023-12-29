@@ -1,0 +1,307 @@
+/**
+ * Linked List class, using generics, that implements an Interface.
+ * It includes the following methods: addNewEntry, addNewEntryGivenPosition, getNodeAt, removeEntryGivenPosition,
+ * removeAllEntry, isEmpty, replaceEntryGivenPosition, getEntry, toArray, containsName, containsEmail, contains, getLength
+ *  and Node inner class.
+ */
+
+import java.util.ArrayList;
+
+/**
+ * @author Elton Evangelista
+ *
+ */
+public class LList<T> implements ListInterface<T> {
+	
+	private Node head;
+	private int numberOfNodes;
+	
+	public LList() {	//constructor
+		
+		initializeLList();
+	}
+	
+	/**
+	 * to clear List
+	 */
+	public void initializeLList() {	
+		
+		head = null;
+		numberOfNodes = 0;	
+	}	
+	
+	/**
+	 * add new entry at the end of the list
+	 */
+	@Override
+	public void addNewEntry(T newEntry) {	
+		// TODO Auto-generated method stub
+		
+		Node newNode = new Node(newEntry); 
+		
+		if(isEmpty()) {		//if empty, newNode will be at the first position of the list (head) 
+			head = newNode;
+		}
+		else {
+			Node lastNode = getNodeAt(numberOfNodes);	//get the last Node
+			lastNode.setNextNode(newNode);		//set the newNode as the next Node
+		}
+		numberOfNodes++;	//update number of Nodes.
+	}
+	
+	/**
+	 * check if it's empty based on the number of Nodes
+	 */
+	@Override
+	public boolean isEmpty() {		
+		// TODO Auto-generated method stub
+		
+		if (numberOfNodes == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * @param givenPosition
+	 * @return currentNode
+	 * get Node at the last position
+	 */
+	private Node getNodeAt(int givenPosition) {		
+		
+		Node currentNode = head;
+		
+		for (int i=1;i<givenPosition;i++) {		
+			currentNode = currentNode.getNextNode();
+		}
+		return currentNode;
+	} 
+	
+	/**
+	 * add new entry in a given position
+	 */
+	@Override
+	public void addNewEntryGivenPosition(T newEntry, int index) {
+		// TODO Auto-generated method stub
+		
+		if ((index >= 1) && (index <= numberOfNodes + 1))		//check if index is valid
+	      {
+	         Node newNode = new Node(newEntry);
+	         
+	         if (numberOfNodes == 1){	//place newNode ahead	         
+	            newNode.setNextNode(head);	//
+	            head = newNode;
+	         }
+	         else {		//list is not empty and index > 1
+	            Node nodeBefore = getNodeAt(index - 1);
+	            Node nodeAfter = nodeBefore.getNextNode();
+	            newNode.setNextNode(nodeAfter);
+	            nodeBefore.setNextNode(newNode);
+	         }
+	         numberOfNodes++;
+	      }
+	      else
+	         throw new IndexOutOfBoundsException("Illegal position given to add operation.");	
+	}
+	
+	/**
+	 * remove all entries
+	 */
+	@Override
+	public void removeAllEntry() {
+		// TODO Auto-generated method stub
+		
+		initializeLList();
+	}
+
+	/**
+	 * remove Entry Given Position
+	 */
+	@Override
+	public void removeEntryGivenPosition(int index) {
+		// TODO Auto-generated method stub
+		
+		if ((index >= 1) && (index <= numberOfNodes))	//check if index is valid and Node is not empty
+	      {		
+			if ((index == 1)) {									
+				if (numberOfNodes == 1) {					
+					head = null;				//remove unique Node on the List				
+				}
+				else {							//set nodeAfter ahead							            
+		            Node nodeAfter = getNodeAt(index + 1);
+		            head = nodeAfter;					
+				}			
+			}				
+			else if (index == numberOfNodes) {		//set nextNode to null for the new "Last Node"				
+				Node nodeRemove = getNodeAt(index);
+				nodeRemove = null;
+				Node nodeBefore = getNodeAt(index - 1);
+				nodeBefore.setNextNode(null);				
+			}
+			else {								//set nextNode for the Node positioned before the one removed.			
+				Node nodeRemove = getNodeAt(index);
+				nodeRemove = null;
+	            Node nodeBefore = getNodeAt(index - 1);
+	            Node nodeAfter = getNodeAt(index + 1);
+	            nodeBefore.setNextNode(nodeAfter);           				
+			}		
+			numberOfNodes--;	         
+	      }
+	      else {
+	    	  throw new IndexOutOfBoundsException("Illegal position given to add operation or Node is empty.");
+	      }	  		
+	}
+
+	/**
+	 * replace Entry Given Position
+	 */
+	@Override
+	public void replaceEntryGivenPosition(T newEntry, int index) {
+		// TODO Auto-generated method stub
+		
+		if ((index >= 1) && (index <= numberOfNodes)) {	//check if index is valid and Node is not empty			
+			Node nodeReplace = getNodeAt(index);
+			nodeReplace.setNode(newEntry);	
+		}
+		else {			
+			throw new IndexOutOfBoundsException("Illegal position given to add operation or Node is empty.");		
+		}		
+	}	
+
+	/**
+	 * get Entry by index
+	 */
+	@Override
+	public T getEntry(int index) {
+		// TODO Auto-generated method stub
+
+		if ((index >= 1) && (index <= numberOfNodes)) {	//check if index is valid and Node is not empty			
+			Node nodeEntry = getNodeAt(index);
+			return nodeEntry.getNode();		
+		}
+		else {			
+			throw new IndexOutOfBoundsException("Illegal position given to add operation or Node is empty.");			
+		}			
+	}
+
+	/**
+	 * toArray method
+	 */
+	@Override
+	public ArrayList<T> toArray() {
+		// TODO Auto-generated method stub
+		
+		ArrayList<T> list = new ArrayList<>();
+		
+		for (int i=1;i<=numberOfNodes;i++) {			
+			Node nodeEntry = getNodeAt(i);
+			list.add(nodeEntry.getNode());
+		}	
+		return list;
+	}
+	
+	
+	/**
+	 * check if contain name
+	 * @return boolean
+	 */
+	@Override
+	public boolean containsName(T entry) {
+		// TODO Auto-generated method stub
+ 		
+		Person wantedName = (Person) entry;
+		
+		for (int i=1;i<=numberOfNodes;i++) {			
+			Node nodeEntry = getNodeAt(i);
+			Person name = (Person) nodeEntry.nodeValue;
+			
+			if (name.getName().equals(wantedName.getName())) {
+				return true;				
+			}
+		}		
+		return false;
+	}
+	
+	/**
+	 * check contains Email
+	 */
+	@Override
+	public boolean containsEmail(T entry) {
+		// TODO Auto-generated method stub
+		
+		Person wantedEmail = (Person) entry;
+		
+		for (int i=1;i<=numberOfNodes;i++) {			
+			Node nodeEntry = getNodeAt(i);
+			Person email = (Person) nodeEntry.nodeValue;
+			
+			if (email.getEmail().equals(wantedEmail.getEmail())) {
+				return true;				
+			}
+		}		
+		return false;	
+	}
+		
+	/**
+	 * check contains entry
+	 */
+	@Override
+	public boolean contains(T entry) {
+		// TODO Auto-generated method stub
+ 		
+		for (int i=1;i<=numberOfNodes;i++) {			
+			Node nodeEntry = getNodeAt(i);
+			if (nodeEntry.nodeValue.equals(entry) ) {			//nodeEntry.getNode().equals(entry)
+				return true;				
+			}
+		}		
+		return false;
+	}
+
+	/**
+	 * get length
+	 */
+	@Override
+	public int getLength() {
+		// TODO Auto-generated method stub
+		return numberOfNodes;
+	}
+		
+	private class Node {
+		
+		/**
+		 *  private inner class
+		 */
+		private T nodeValue;	//new entry
+		private Node next;		//link to next node
+		
+		private Node(T newEntry) {	//constructor
+			this.nodeValue = newEntry;
+			next = null;
+		}
+		
+		private Node(T newEntry, Node nextNode) {	//constructor
+			this.nodeValue = newEntry;
+			this.next = nextNode;			
+		}
+		
+		private T getNode() {
+			return nodeValue;
+		}
+		
+		private void setNode(T value) {
+			this.nodeValue = value;
+		}
+		
+		private Node getNextNode() {
+			return next;		
+		}
+		
+		private void setNextNode(Node nextNode) {
+			this.next = nextNode;			
+		}			
+	}
+	
+}
