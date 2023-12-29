@@ -1,0 +1,140 @@
+/**
+ * author Elton Evangelista
+ * Using a generic array, this class implements a Deque Interface.
+ */
+
+import java.util.NoSuchElementException;
+
+public class DequeArray<T> implements DequeInterface<T> {
+	
+	private static final int DEF_CAP=25;
+    private Object[] deque;
+    private int front;
+    private int rear;
+    private int size;
+    
+    public DequeArray() {
+    	
+    	this.deque = new Object[DEF_CAP];
+        this.front = -1;
+        this.rear = -1;
+        this.size = 0;
+    }
+
+	@Override
+	public void addToFront(T newEntry) {
+		
+		ensureCapacity();
+        if (isEmpty()) {
+            front = rear = 0;
+        } else {
+            front = (front - 1 + deque.length) % deque.length;
+        }
+        deque[front] = newEntry;
+        size++;
+	}
+	
+	@Override
+	public void addToBack(T newEntry) {
+		
+		ensureCapacity();
+        if (isEmpty()) {
+            front = rear = 0;
+        } else {
+            rear = (rear + 1) % deque.length;
+        }
+        deque[rear] = newEntry;
+        size++;
+	}
+	
+
+	@Override
+	public T removeFront() {
+		
+		if (isEmpty()) {
+            throw new NoSuchElementException("");
+        }
+
+        T removedElement = (T) deque[front];
+        if (front == rear) {
+            front = rear = -1;
+        } else {
+            front = (front + 1) % deque.length;
+        }
+        size--;
+
+        return removedElement;
+	}
+
+	@Override
+	public T removeBack() {
+		
+		if (isEmpty()) {
+            throw new NoSuchElementException("");
+        }
+
+        T removedElement = (T) deque[rear];
+        if (front == rear) {
+            front = rear = -1;
+        } else {
+            rear = (rear - 1 + deque.length) % deque.length;
+        }
+        size--;
+
+        return removedElement;
+
+	}
+
+	@Override
+	public T getFront() {
+		
+		if (isEmpty()) {
+            throw new NoSuchElementException("");
+        }
+        return (T) deque[front];
+
+	}
+	
+	@Override
+	public T getBack() {
+
+		if (isEmpty()) {
+            throw new NoSuchElementException("");
+        }
+        return (T) deque[rear];
+	}
+
+	@Override
+	public boolean isEmpty() {
+		
+		return size == 0;
+
+	}
+	
+	public int size() {
+        return size;
+    }
+
+	@Override
+	public void clear() {
+		
+		deque = new Object[DEF_CAP];
+        front = rear = -1;
+        size = 0;
+	}
+	
+	private void ensureCapacity() {
+        if (size == deque.length) {
+            Object[] newArray = new Object[2 * deque.length];
+            int index = 0;
+            for (int i = front; i != rear; i = (i + 1) % deque.length) {
+                newArray[index++] = deque[i];
+            }
+            newArray[index] = deque[rear];
+            front = 0;
+            rear = index;
+            deque = newArray;
+        }
+    }
+
+}
